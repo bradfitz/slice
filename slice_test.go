@@ -1,3 +1,7 @@
+// Copyright 2014 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 package slice
 
 import (
@@ -5,7 +9,6 @@ import (
 	"reflect"
 	"sort"
 	"testing"
-	"unsafe"
 )
 
 const nItem = 50000
@@ -31,25 +34,6 @@ func (l lessLogger) Less(i, j int) bool {
 	got := l.Interface.Less(i, j)
 	*l.dst = append(*l.dst, lessCall{i, j, got})
 	return got
-}
-
-func TestSwapMem(t *testing.T) {
-	buf := []byte{
-		1, 2, 3, 4,
-		5, 6, 7, 8,
-		0, 0, 0, 0,
-	}
-	const size = 4
-	ms := newMemSwap(size, unsafe.Pointer(&buf[0]), unsafe.Pointer(&buf[8]))
-	ms.Swap(0, 1)
-	want := []byte{
-		5, 6, 7, 8,
-		1, 2, 3, 4,
-		1, 2, 3, 4,
-	}
-	if !reflect.DeepEqual(buf, want) {
-		t.Errorf("buf = %v; want %v", buf, want)
-	}
 }
 
 func TestSort3(t *testing.T) {
